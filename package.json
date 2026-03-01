@@ -1,8 +1,7 @@
 {
   "name": "onmeet-root",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "scripts": {
-    "build": "npm run build --prefix frontend",
-    "install": "npm install --prefix frontend && npm install axios express"
+    "build": "cd frontend && npm install && npm run build"
   }
 }
