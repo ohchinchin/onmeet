@@ -73,7 +73,7 @@ function App() {
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        setError("繝・・繧ｿ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲０penRouter縺ｮAPI繧ｭ繝ｼ縺梧ｭ｣縺励￥險ｭ螳壹＆繧後※縺・ｋ縺九√し繝ｼ繝舌・縺ｮ迥ｶ諷九ｒ遒ｺ隱阪＠縺ｦ縺上□縺輔＞縲・);
+        setError("郢昴・繝ｻ郢ｧ・ｿ邵ｺ・ｮ髫ｱ・ｭ邵ｺ・ｿ髴趣ｽｼ邵ｺ・ｿ邵ｺ・ｫ陞滂ｽｱ隰ｨ蜉ｱ・邵ｺ・ｾ邵ｺ蜉ｱ笳・ｸｲ・壬enRouter邵ｺ・ｮAPI郢ｧ・ｭ郢晢ｽｼ邵ｺ譴ｧ・ｭ・｣邵ｺ蜉ｱ・･髫ｪ・ｭ陞ｳ螢ｹ・・ｹｧ蠕娯ｻ邵ｺ繝ｻ・狗ｸｺ荵敖竏壹＠郢晢ｽｼ郢晁・繝ｻ邵ｺ・ｮ霑･・ｶ隲ｷ荵晢ｽ帝￡・ｺ髫ｱ髦ｪ・邵ｺ・ｦ邵ｺ荳岩味邵ｺ霈費ｼ樒ｸｲ繝ｻ);
       } finally {
         setIsLoading(false);
       }
@@ -151,7 +151,7 @@ function App() {
     let currentHistory: Message[] = [];
 
     // 1. Moderator Intro
-    await processTurn(moderatorAgent, "縺昴ｌ縺ｧ縺ｯ隴ｰ隲悶ｒ髢句ｧ九＠縺ｾ縺励ｇ縺・ゆｻ頑律縺ｮ繝医ヴ繝・け縺ｯ縲・ + topic + "縲阪〒縺吶ゅ∪縺壹・逧・＆繧薙・縺疲э隕九ｒ縺願◇縺九○縺上□縺輔＞縲・, currentHistory);
+    await processTurn(moderatorAgent, "邵ｺ譏ｴ・檎ｸｺ・ｧ邵ｺ・ｯ髫ｴ・ｰ髫ｲ謔ｶ・帝ｫ｢蜿･・ｧ荵晢ｼ邵ｺ・ｾ邵ｺ蜉ｱ・・ｸｺ繝ｻﾂ繧・ｽｻ鬆大ｾ狗ｸｺ・ｮ郢晏現繝ｴ郢昴・縺醍ｸｺ・ｯ邵ｲ繝ｻ + topic + "邵ｲ髦ｪ縲堤ｸｺ蜷ｶﾂ繧・穐邵ｺ螢ｹ繝ｻ騾ｧ繝ｻ・・ｹｧ阮吶・邵ｺ逍ｲﾑ埼囎荵晢ｽ堤ｸｺ鬘倪裸邵ｺ荵昶雷邵ｺ荳岩味邵ｺ霈費ｼ樒ｸｲ繝ｻ, currentHistory);
 
     // 2. Debate Turns
     for (let turn = 1; turn <= maxTurns; turn++) {
@@ -221,7 +221,7 @@ function App() {
   };
 
   const downloadMarkdown = () => {
-    let md = `# 隴ｰ隲冶ｨ倬鹸: ${topic}\n\n`;
+    let md = `# 髫ｴ・ｰ髫ｲ蜀ｶ・ｨ蛟ｬ鮖ｸ: ${topic}\n\n`;
     messages.forEach(m => {
       md += `### ${m.role} ${m.senderName}\n${m.content}\n\n`;
     });
@@ -236,37 +236,37 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.3</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.4</span></h1>
       </header>
 
       <main className="container">
         {isLoading ? (
           <div className="loading-screen">
-            <p>隴ｰ隲悶・貅門ｙ繧偵＠縺ｦ縺・∪縺・..</p>
-            <div className="debug-info">API縺ｸ縺ｮ謗･邯壹ｒ遒ｺ隱堺ｸｭ...</div>
+            <p>髫ｴ・ｰ髫ｲ謔ｶ繝ｻ雋・摩・咏ｹｧ蛛ｵ・邵ｺ・ｦ邵ｺ繝ｻ竏ｪ邵ｺ繝ｻ..</p>
+            <div className="debug-info">API邵ｺ・ｸ邵ｺ・ｮ隰暦ｽ･驍ｯ螢ｹ・帝￡・ｺ髫ｱ蝣ｺ・ｸ・ｭ...</div>
           </div>
         ) : error ? (
           <div className="error-screen">
-            <h3>謗･邯壹お繝ｩ繝ｼ</h3>
+            <h3>隰暦ｽ･驍ｯ螢ｹ縺顔ｹ晢ｽｩ郢晢ｽｼ</h3>
             <p style={{color: '#ff6b6b'}}>{error}</p>
             <div style={{fontSize: '12px', marginTop: '10px', opacity: 0.7}}>
-              繝偵Φ繝・ Vercel縺ｮ迺ｰ蠅・､画焚縺ｫ OPENROUTER_API_KEY 縺梧ｭ｣縺励￥險ｭ螳壹＆繧後※縺・ｋ縺狗｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・            </div>
-            <button onClick={() => window.location.reload()} className="btn-secondary" style={{marginTop: '20px'}}>蜀崎ｪｭ縺ｿ霎ｼ縺ｿ</button>
+              郢晏・ﾎｦ郢昴・ Vercel邵ｺ・ｮ霑ｺ・ｰ陟・・・､逕ｻ辟夂ｸｺ・ｫ OPENROUTER_API_KEY 邵ｺ譴ｧ・ｭ・｣邵ｺ蜉ｱ・･髫ｪ・ｭ陞ｳ螢ｹ・・ｹｧ蠕娯ｻ邵ｺ繝ｻ・狗ｸｺ迢暦ｽ｢・ｺ髫ｱ髦ｪ・邵ｺ・ｦ邵ｺ荳岩味邵ｺ霈費ｼ樒ｸｲ繝ｻ            </div>
+            <button onClick={() => window.location.reload()} className="btn-secondary" style={{marginTop: '20px'}}>陷蟠趣ｽｪ・ｭ邵ｺ・ｿ髴趣ｽｼ邵ｺ・ｿ</button>
           </div>
         ) : status === 'setting' ? (
           <section className="setup-area">
             <div className="input-group">
-              <label>隴ｰ隲悶・繝医ヴ繝・け</label>
+              <label>髫ｴ・ｰ髫ｲ謔ｶ繝ｻ郢晏現繝ｴ郢昴・縺・/label>
               <input 
                 type="text" 
                 value={topic} 
                 onChange={(e) => setTopic(e.target.value)} 
-                placeholder="萓・ AI縺ｯ莠ｺ鬘槭ｒ謨代≧縺具ｼ・
+                placeholder="關薙・ AI邵ｺ・ｯ闔・ｺ鬯俶ｧｭ・定ｬｨ莉｣竕ｧ邵ｺ蜈ｷ・ｼ繝ｻ
               />
             </div>
 
             <div className="input-group">
-              <label>繧ｿ繝ｼ繝ｳ謨ｰ: {maxTurns}</label>
+              <label>郢ｧ・ｿ郢晢ｽｼ郢晢ｽｳ隰ｨ・ｰ: {maxTurns}</label>
               <input 
                 type="range" 
                 min="1" max="10" 
@@ -277,8 +277,8 @@ function App() {
 
             <div className="agents-setup">
               <div className="section-header">
-                <h3>蜿ょ刈繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝・(譛螟ｧ5蜷・</h3>
-                <button onClick={randomizeAll} className="btn-secondary">軸 繝ｩ繝ｳ繝繝險ｭ螳・/button>
+                <h3>陷ｿ繧・・郢ｧ・ｨ郢晢ｽｼ郢ｧ・ｸ郢ｧ・ｧ郢晢ｽｳ郢昴・(隴崢陞滂ｽｧ5陷ｷ繝ｻ</h3>
+                <button onClick={randomizeAll} className="btn-secondary">﨟櫁ｻｸ 郢晢ｽｩ郢晢ｽｳ郢敖郢晢｣ｰ髫ｪ・ｭ陞ｳ繝ｻ/button>
               </div>
               
               {selectedAgents.map((agent, index) => (
@@ -289,12 +289,12 @@ function App() {
                   <select value={agent.modelId} onChange={(e) => updateAgent(index, 'modelId', e.target.value)}>
                     {models.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                   </select>
-                  <button onClick={() => removeAgent(index)} className="btn-danger">蜑企勁</button>
+                  <button onClick={() => removeAgent(index)} className="btn-danger">陷台ｼ∝求</button>
                 </div>
               ))}
               
               {selectedAgents.length < 5 && (
-                <button onClick={addAgent} className="btn-add">+ 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医ｒ霑ｽ蜉</button>
+                <button onClick={addAgent} className="btn-add">+ 郢ｧ・ｨ郢晢ｽｼ郢ｧ・ｸ郢ｧ・ｧ郢晢ｽｳ郢晏現・帝恆・ｽ陷会｣ｰ</button>
               )}
             </div>
 
@@ -303,7 +303,7 @@ function App() {
               className="btn-primary start-btn" 
               disabled={!topic || selectedAgents.length === 0}
             >
-              隴ｰ隲悶ｒ髢句ｧ九☆繧・            </button>
+              髫ｴ・ｰ髫ｲ謔ｶ・帝ｫ｢蜿･・ｧ荵昶・郢ｧ繝ｻ            </button>
           </section>
         ) : (
           <section className="debate-area">
@@ -311,8 +311,8 @@ function App() {
               <h2>Topic: {topic}</h2>
               {status === 'completed' && (
                 <div className="action-buttons">
-                  <button onClick={() => setStatus('setting')} className="btn-secondary">譛蛻昴↓謌ｻ繧・/button>
-                  <button onClick={downloadMarkdown} className="btn-primary">Markdown繧剃ｿ晏ｭ・/button>
+                  <button onClick={() => setStatus('setting')} className="btn-secondary">隴崢陋ｻ譏ｴ竊楢ｬ鯉ｽｻ郢ｧ繝ｻ/button>
+                  <button onClick={downloadMarkdown} className="btn-primary">Markdown郢ｧ蜑・ｽｿ譎擾ｽｭ繝ｻ/button>
                 </div>
               )}
             </div>
@@ -329,7 +329,7 @@ function App() {
               ))}
               {isTyping && (
                 <div className="typing-indicator">
-                  AI縺梧晁・ｸｭ... <span>.</span><span>.</span><span>.</span>
+                  AI邵ｺ譴ｧﾂ譎・繝ｻ・ｸ・ｭ... <span>.</span><span>.</span><span>.</span>
                 </div>
               )}
             </div>
