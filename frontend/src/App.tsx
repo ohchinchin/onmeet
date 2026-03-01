@@ -36,6 +36,8 @@ function App() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [moderatorRole, setModeratorRole] = useState<Role | null>(null);
   const [models, setModels] = useState<Model[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [topic, setTopic] = useState("");
   const [selectedAgents, setSelectedAgents] = useState<Agent[]>([]);
   const [maxTurns, setMaxTurns] = useState(5);
@@ -46,13 +48,37 @@ function App() {
 
   useEffect(() => {
     // Initial data fetch
-    fetch(`${API_BASE}/api/roles`).then(res => res.json()).then(data => {
-      setRoles(data.roles);
-      setModeratorRole(data.moderator);
-    });
-    fetch(`${API_BASE}/api/models`).then(res => res.json()).then(data => {
-      setModels(data.models);
-    });
+    setIsLoading(true);
+    setError(null);
+    
+    const fetchInitialData = async () => {
+      try {
+        const [rolesRes, modelsRes] = await Promise.all([
+          fetch(`${API_BASE}/api/roles`),
+          fetch(`${API_BASE}/api/models`)
+        ]);
+
+        if (!rolesRes.ok || !modelsRes.ok) throw new Error("API request failed");
+
+        const rolesData = await rolesRes.json();
+        const modelsData = await modelsRes.json();
+
+        if (rolesData.roles) {
+          setRoles(rolesData.roles);
+          setModeratorRole(rolesData.moderator);
+        }
+        if (modelsData.models) {
+          setModels(modelsData.models);
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError("データの読み込みに失敗しました。OpenRouterのAPIキーが正しく設定されているか、サーバーの状態を確認してください。");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -213,7 +239,16 @@ function App() {
       </header>
 
       <main className="container">
-        {status === 'setting' ? (
+        {isLoading ? (
+          <div className="loading-screen">
+            <p>議論の準備をしています...</p>
+          </div>
+        ) : error ? (
+          <div className="error-screen">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="btn-secondary">再読み込み</button>
+          </div>
+        ) : status === 'setting' ? (
           <section className="setup-area">
             <div className="input-group">
               <label>議論のトピック</label>
