@@ -136,7 +136,7 @@ function App() {
     setSelectedAgents(newAgents);
   };
 
-  const fetchChat = async (agent: Agent, history: Message[], isModeratorTurn: boolean, isSummaryTurn: boolean = false) => {
+  const fetchChat = async (agent: Agent, history: Message[], isModeratorTurn: boolean, isSummaryTurn: boolean = false, retryCount = 0): Promise<string> => {
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
@@ -153,6 +153,12 @@ function App() {
       const data = await res.json();
       
       if (!res.ok) {
+        // 429 (Rate Limit) の場合は3秒待って1回だけリトライ
+        if (res.status === 429 && retryCount < 1) {
+          console.warn("Rate limit hit. Retrying in 3s...");
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          return fetchChat(agent, history, isModeratorTurn, isSummaryTurn, retryCount + 1);
+        }
         throw new Error(data.error || `API Error: ${res.status}`);
       }
       
@@ -177,7 +183,7 @@ function App() {
     let currentHistory: Message[] = [];
     
     // 開始の挨拶
-    await processTurn(moderatorAgent, `議題「${topic}」について、これより議論を開始します。参加者の皆さんはそれぞれの専門的見地から発言をお願いします。`, currentHistory);
+    await processTurn(moderatorAgent, `議題「${topic}」について、これより議論を開始します。参加者の皆さんはそれぞれの専門見地から発言をお願いします。`, currentHistory);
 
     try {
       for (let turn = 1; turn <= maxTurns; turn++) {
@@ -185,7 +191,8 @@ function App() {
           const response = await fetchChat(agent, currentHistory, false);
           
           if (response.startsWith("[エラー]")) {
-            await processTurn(moderatorAgent, `申し訳ありません、${agent.name}（${agent.role}）との通信中に問題が発生しました。議論を中断します。原因：${response.replace("[エラー] ", "")}`, currentHistory);
+            // エラー報告は履歴に含めない (skipHistory = true)
+            await processTurn(moderatorAgent, `申し訳ありません、${agent.name}（${agent.role}）との通信中に問題が発生しました。議論を中断します。原因：${response.replace("[エラー] ", "")}`, currentHistory, true);
             setStatus('completed');
             return;
           }
@@ -205,7 +212,7 @@ function App() {
       // 最終総括
       const summaryResponse = await fetchChat(moderatorAgent, currentHistory, false, true);
       if (summaryResponse.startsWith("[エラー]")) {
-        await processTurn(moderatorAgent, `議論は出尽くしたようです。本日の議論を終了します。`, currentHistory);
+        await processTurn(moderatorAgent, `議論は出尽くしたようです。本日の議論を終了します。`, currentHistory, true);
       } else {
         await simulateTyping(moderatorAgent, summaryResponse, currentHistory);
       }
@@ -218,7 +225,6 @@ function App() {
 
   const simulateTyping = async (agent: Agent, content: string, currentHistory: Message[]) => {
     setIsTyping(true);
-    // 発言の長さに応じて少し待機時間を変える（より自然に）
     const delay = Math.min(Math.max(content.length * 10, 1000), 3000);
     await new Promise(resolve => setTimeout(resolve, delay));
     
@@ -235,7 +241,7 @@ function App() {
     setIsTyping(false);
   };
 
-  const processTurn = async (agent: Agent, content: string, currentHistory: Message[]) => {
+  const processTurn = async (agent: Agent, content: string, currentHistory: Message[], skipHistory: boolean = false) => {
     const newMessage: Message = {
       id: Math.random().toString(36).substr(2, 9),
       senderName: agent.name,
@@ -244,8 +250,9 @@ function App() {
       isModerator: agent.isModerator
     };
     setMessages(prev => [...prev, newMessage]);
-    currentHistory.push(newMessage);
-    // 表示のタイミングを少し空ける
+    if (!skipHistory) {
+      currentHistory.push(newMessage);
+    }
     await new Promise(resolve => setTimeout(resolve, 500));
   };
 
@@ -265,7 +272,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.1.0</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.1.1</span></h1>
       </header>
 
       <main className="container">
