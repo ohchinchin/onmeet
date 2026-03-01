@@ -265,7 +265,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.9</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.1.0</span></h1>
       </header>
 
       <main className="container">
