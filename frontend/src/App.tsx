@@ -62,7 +62,7 @@ function App() {
   }, [messages, isTyping]);
 
   const addAgent = () => {
-    if (selectedAgents.length >= 5) return;
+    if (selectedAgents.length >= 5 || roles.length === 0 || models.length === 0) return;
     const firstRole = roles[0];
     const firstModel = models[0];
     const newAgent: Agent = {
@@ -70,7 +70,7 @@ function App() {
       name: firstRole.name,
       role: firstRole.role,
       personality: firstRole.personality,
-      modelId: firstModel?.id || "",
+      modelId: firstModel.id,
       isModerator: false
     };
     setSelectedAgents([...selectedAgents, newAgent]);
