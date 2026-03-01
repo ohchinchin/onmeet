@@ -190,9 +190,12 @@ function App() {
         for (const agent of selectedAgents) {
           const response = await fetchChat(agent, currentHistory, false);
           
-          if (response.startsWith("[エラー]")) {
+          // エラー文字列の検出を強化
+          const isErrorResponse = response.startsWith("[エラー]") || response.includes("Error:");
+          
+          if (isErrorResponse) {
             // エラー報告は履歴に含めない (skipHistory = true)
-            await processTurn(moderatorAgent, `申し訳ありません、${agent.name}（${agent.role}）との通信中に問題が発生しました。議論を中断します。原因：${response.replace("[エラー] ", "")}`, currentHistory, true);
+            await processTurn(moderatorAgent, `申し訳ありません、${agent.name}（${agent.role}）との通信中に問題が発生しました。これ以上の議論の継続は困難と判断し、中断します。原因：${response}`, currentHistory, true);
             setStatus('completed');
             return;
           }
@@ -203,16 +206,16 @@ function App() {
         // 中盤で司会者が整理
         if (turn === Math.ceil(maxTurns / 2) && turn !== maxTurns) {
           const modResponse = await fetchChat(moderatorAgent, currentHistory, true);
-          if (!modResponse.startsWith("[エラー]")) {
+          if (!modResponse.startsWith("[エラー]") && !modResponse.includes("Error:")) {
             await simulateTyping(moderatorAgent, modResponse, currentHistory);
           }
         }
       }
 
-      // 最終総括
+      // 最終総括（履歴にある実際の発言のみを元にする）
       const summaryResponse = await fetchChat(moderatorAgent, currentHistory, false, true);
-      if (summaryResponse.startsWith("[エラー]")) {
-        await processTurn(moderatorAgent, `議論は出尽くしたようです。本日の議論を終了します。`, currentHistory, true);
+      if (summaryResponse.startsWith("[エラー]") || summaryResponse.includes("Error:")) {
+        await processTurn(moderatorAgent, `議論は以上となります。通信エラーにより総括の作成をスキップしました。`, currentHistory, true);
       } else {
         await simulateTyping(moderatorAgent, summaryResponse, currentHistory);
       }
@@ -272,7 +275,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.1.1</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.2.0</span></h1>
       </header>
 
       <main className="container">

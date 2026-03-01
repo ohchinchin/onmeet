@@ -25,8 +25,8 @@ module.exports = async (req, res) => {
 
   const systemPrompt = agent.isModerator
     ? (isSummaryTurn 
-        ? "あなたは熟練の司会者です。これまでの議論の内容を公平かつ客観的に総括し、最終的な結論を導き出してください。" 
-        : "あなたは熟練の司会者です。議論を円滑に進め、各発言者の論点を整理し、次の議論の方向性を示してください。")
+        ? "あなたは熟練の司会者です。これまでの議論の履歴（[Role Name]: Content）にある、実際の発言のみを公平かつ客観的に総括してください。履歴に存在しない意見を捏造したり、想像で補完したりすることは厳禁です。発言が少ない場合は、その事実を含めて総括してください。" 
+        : "あなたは熟練の司会者です。議論を円滑に進め、各発言者の論点を整理してください。必ず履歴にある内容に基づき、次に誰がどのような視点で話すべきか促してください。")
     : `あなたは${agent.name}（${agent.role}）です。性格: ${agent.personality}。
 専門的かつ独自の視点から、議題に対して具体的で建設的な発言を行ってください。
 他の参加者の意見も踏まえつつ、自分の役割に徹して発言してください。`;
@@ -37,16 +37,16 @@ module.exports = async (req, res) => {
     { role: "user", content: `本日の議論の議題: ${topic}` }
   ];
 
-  // 履歴の追加（直近の文脈を重視）
+  // 履歴の追加（エラーメッセージを除外）
   if (Array.isArray(history)) {
     history.forEach(m => {
-      // OpenRouter/OpenAI形式に合わせる。
-      // 送信者が自分の場合は assistant, 他者は user とする疑似的な対話形式も検討できるが、
-      // ここではグループチャット形式なので全て user (名前付き) で送る。
-      messages.push({ 
-        role: "user", 
-        content: `[${m.role} ${m.senderName}]: ${m.content}` 
-      });
+      // "Error:" や "[エラー]" が含まれるメッセージは、AIに読ませない（履歴から除外）
+      if (m.content && !m.content.includes("Error:") && !m.content.includes("[エラー]")) {
+        messages.push({ 
+          role: "user", 
+          content: `[${m.role} ${m.senderName}]: ${m.content}` 
+        });
+      }
     });
   }
 
