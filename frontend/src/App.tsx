@@ -73,7 +73,7 @@ function App() {
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        setError("データの読み込みに失敗しました。OpenRouterのAPIキーが正しく設定されているか、サーバーの状態を確認してください。");
+        setError("繝・・繧ｿ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲０penRouter縺ｮAPI繧ｭ繝ｼ縺梧ｭ｣縺励￥險ｭ螳壹＆繧後※縺・ｋ縺九√し繝ｼ繝舌・縺ｮ迥ｶ諷九ｒ遒ｺ隱阪＠縺ｦ縺上□縺輔＞縲・);
       } finally {
         setIsLoading(false);
       }
@@ -151,7 +151,7 @@ function App() {
     let currentHistory: Message[] = [];
 
     // 1. Moderator Intro
-    await processTurn(moderatorAgent, "それでは議論を開始しましょう。今日のトピックは「" + topic + "」です。まずは皆さんのご意見をお聞かせください。", currentHistory);
+    await processTurn(moderatorAgent, "縺昴ｌ縺ｧ縺ｯ隴ｰ隲悶ｒ髢句ｧ九＠縺ｾ縺励ｇ縺・ゆｻ頑律縺ｮ繝医ヴ繝・け縺ｯ縲・ + topic + "縲阪〒縺吶ゅ∪縺壹・逧・＆繧薙・縺疲э隕九ｒ縺願◇縺九○縺上□縺輔＞縲・, currentHistory);
 
     // 2. Debate Turns
     for (let turn = 1; turn <= maxTurns; turn++) {
@@ -221,7 +221,7 @@ function App() {
   };
 
   const downloadMarkdown = () => {
-    let md = `# 議論記録: ${topic}\n\n`;
+    let md = `# 隴ｰ隲冶ｨ倬鹸: ${topic}\n\n`;
     messages.forEach(m => {
       md += `### ${m.role} ${m.senderName}\n${m.content}\n\n`;
     });
@@ -236,38 +236,37 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.2</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.3</span></h1>
       </header>
 
       <main className="container">
         {isLoading ? (
           <div className="loading-screen">
-            <p>議論の準備をしています...</p>
-            <div className="debug-info">APIへの接続を確認中...</div>
+            <p>隴ｰ隲悶・貅門ｙ繧偵＠縺ｦ縺・∪縺・..</p>
+            <div className="debug-info">API縺ｸ縺ｮ謗･邯壹ｒ遒ｺ隱堺ｸｭ...</div>
           </div>
         ) : error ? (
           <div className="error-screen">
-            <h3>接続エラー</h3>
+            <h3>謗･邯壹お繝ｩ繝ｼ</h3>
             <p style={{color: '#ff6b6b'}}>{error}</p>
             <div style={{fontSize: '12px', marginTop: '10px', opacity: 0.7}}>
-              ヒント: Vercelの環境変数に OPENROUTER_API_KEY が正しく設定されているか確認してください。
-            </div>
-            <button onClick={() => window.location.reload()} className="btn-secondary" style={{marginTop: '20px'}}>再読み込み</button>
+              繝偵Φ繝・ Vercel縺ｮ迺ｰ蠅・､画焚縺ｫ OPENROUTER_API_KEY 縺梧ｭ｣縺励￥險ｭ螳壹＆繧後※縺・ｋ縺狗｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・            </div>
+            <button onClick={() => window.location.reload()} className="btn-secondary" style={{marginTop: '20px'}}>蜀崎ｪｭ縺ｿ霎ｼ縺ｿ</button>
           </div>
         ) : status === 'setting' ? (
           <section className="setup-area">
             <div className="input-group">
-              <label>議論のトピック</label>
+              <label>隴ｰ隲悶・繝医ヴ繝・け</label>
               <input 
                 type="text" 
                 value={topic} 
                 onChange={(e) => setTopic(e.target.value)} 
-                placeholder="例: AIは人類を救うか？"
+                placeholder="萓・ AI縺ｯ莠ｺ鬘槭ｒ謨代≧縺具ｼ・
               />
             </div>
 
             <div className="input-group">
-              <label>ターン数: {maxTurns}</label>
+              <label>繧ｿ繝ｼ繝ｳ謨ｰ: {maxTurns}</label>
               <input 
                 type="range" 
                 min="1" max="10" 
@@ -278,8 +277,8 @@ function App() {
 
             <div className="agents-setup">
               <div className="section-header">
-                <h3>参加エージェント (最大5名)</h3>
-                <button onClick={randomizeAll} className="btn-secondary">🎲 ランダム設定</button>
+                <h3>蜿ょ刈繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝・(譛螟ｧ5蜷・</h3>
+                <button onClick={randomizeAll} className="btn-secondary">軸 繝ｩ繝ｳ繝繝險ｭ螳・/button>
               </div>
               
               {selectedAgents.map((agent, index) => (
@@ -290,12 +289,12 @@ function App() {
                   <select value={agent.modelId} onChange={(e) => updateAgent(index, 'modelId', e.target.value)}>
                     {models.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                   </select>
-                  <button onClick={() => removeAgent(index)} className="btn-danger">削除</button>
+                  <button onClick={() => removeAgent(index)} className="btn-danger">蜑企勁</button>
                 </div>
               ))}
               
               {selectedAgents.length < 5 && (
-                <button onClick={addAgent} className="btn-add">+ エージェントを追加</button>
+                <button onClick={addAgent} className="btn-add">+ 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医ｒ霑ｽ蜉</button>
               )}
             </div>
 
@@ -304,8 +303,7 @@ function App() {
               className="btn-primary start-btn" 
               disabled={!topic || selectedAgents.length === 0}
             >
-              議論を開始する
-            </button>
+              隴ｰ隲悶ｒ髢句ｧ九☆繧・            </button>
           </section>
         ) : (
           <section className="debate-area">
@@ -313,8 +311,8 @@ function App() {
               <h2>Topic: {topic}</h2>
               {status === 'completed' && (
                 <div className="action-buttons">
-                  <button onClick={() => setStatus('setting')} className="btn-secondary">最初に戻る</button>
-                  <button onClick={downloadMarkdown} className="btn-primary">Markdownを保存</button>
+                  <button onClick={() => setStatus('setting')} className="btn-secondary">譛蛻昴↓謌ｻ繧・/button>
+                  <button onClick={downloadMarkdown} className="btn-primary">Markdown繧剃ｿ晏ｭ・/button>
                 </div>
               )}
             </div>
@@ -331,7 +329,7 @@ function App() {
               ))}
               {isTyping && (
                 <div className="typing-indicator">
-                  AIが思考中... <span>.</span><span>.</span><span>.</span>
+                  AI縺梧晁・ｸｭ... <span>.</span><span>.</span><span>.</span>
                 </div>
               )}
             </div>
