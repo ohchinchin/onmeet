@@ -231,7 +231,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.6</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.7</span></h1>
       </header>
 
       <main className="container">
@@ -259,7 +259,7 @@ function App() {
             <div className="agents-setup">
               <div className="section-header">
                 <h3>Agents (Max 5)</h3>
-                <button onClick={randomizeAll} className="btn-secondary">🎲 Randomize</button>
+                <button onClick={randomizeAll} className="btn-secondary">軸 Randomize</button>
               </div>
               
               {selectedAgents.map((agent, index) => (

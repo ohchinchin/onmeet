@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const DEFAULT_FREE_MODELS = [
   { id: "google/gemini-2.0-flash-exp:free", name: "Gemini 2.0 Flash Exp (Free)" },
@@ -6,7 +6,7 @@ const DEFAULT_FREE_MODELS = [
   { id: "mistralai/mistral-7b-instruct:free", name: "Mistral 7B Instruct (Free)" }
 ];
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
     const response = await axios.get("https://openrouter.ai/api/v1/models", { timeout: 5000 });
     const freeModels = (response.data.data || [])
@@ -17,4 +17,4 @@ export default async function handler(req, res) {
   } catch (error) {
     res.status(200).json({ models: DEFAULT_FREE_MODELS });
   }
-}
+};
