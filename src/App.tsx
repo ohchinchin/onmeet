@@ -136,36 +136,6 @@ function App() {
     setSelectedAgents(newAgents);
   };
 
-  const startDebate = async () => {
-    if (!topic || selectedAgents.length === 0 || !moderatorRole) return;
-    setStatus('running');
-    setMessages([]);
-
-    const moderatorAgent: Agent = {
-      ...moderatorRole,
-      modelId: models[0]?.id || "",
-      isModerator: true
-    };
-
-    let currentHistory: Message[] = [];
-    await processTurn(moderatorAgent, "Starting debate. Topic: " + topic, currentHistory);
-
-    for (let turn = 1; turn <= maxTurns; turn++) {
-      for (const agent of selectedAgents) {
-        const response = await fetchChat(agent, currentHistory, false);
-        await simulateTyping(agent, response, currentHistory);
-      }
-      if (turn === Math.ceil(maxTurns / 2)) {
-        const modResponse = await fetchChat(moderatorAgent, currentHistory, true);
-        await simulateTyping(moderatorAgent, modResponse, currentHistory);
-      }
-    }
-
-    const summaryResponse = await fetchChat(moderatorAgent, currentHistory, false, true);
-    await simulateTyping(moderatorAgent, summaryResponse, currentHistory);
-    setStatus('completed');
-  };
-
   const fetchChat = async (agent: Agent, history: Message[], isModeratorTurn: boolean, isSummaryTurn: boolean = false) => {
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
@@ -179,20 +149,78 @@ function App() {
           isSummaryTurn
         })
       });
+      
       const data = await res.json();
+      
       if (!res.ok) {
-        return `Error: ${data.error || res.statusText}`;
+        throw new Error(data.error || `API Error: ${res.status}`);
       }
-      return data.content || "Empty response from AI.";
+      
+      return data.content || "応答がありませんでした。";
     } catch (e: any) {
-      return `Connection Error: ${e.message}`;
+      console.error("fetchChat Error:", e);
+      return `[エラー] ${e.message}`;
     }
   };
 
+  const startDebate = async () => {
+    if (!topic || selectedAgents.length === 0 || !moderatorRole) return;
+    setStatus('running');
+    setMessages([]);
+
+    const moderatorAgent: Agent = {
+      ...moderatorRole,
+      modelId: selectedAgents[0]?.modelId || models[0]?.id || "", 
+      isModerator: true
+    };
+
+    let currentHistory: Message[] = [];
+    
+    // 開始の挨拶
+    await processTurn(moderatorAgent, `議題「${topic}」について、これより議論を開始します。参加者の皆さんはそれぞれの専門的見地から発言をお願いします。`, currentHistory);
+
+    try {
+      for (let turn = 1; turn <= maxTurns; turn++) {
+        for (const agent of selectedAgents) {
+          const response = await fetchChat(agent, currentHistory, false);
+          
+          if (response.startsWith("[エラー]")) {
+            await processTurn(moderatorAgent, `申し訳ありません、${agent.name}（${agent.role}）との通信中に問題が発生しました。議論を中断します。原因：${response.replace("[エラー] ", "")}`, currentHistory);
+            setStatus('completed');
+            return;
+          }
+          
+          await simulateTyping(agent, response, currentHistory);
+        }
+        
+        // 中盤で司会者が整理
+        if (turn === Math.ceil(maxTurns / 2) && turn !== maxTurns) {
+          const modResponse = await fetchChat(moderatorAgent, currentHistory, true);
+          if (!modResponse.startsWith("[エラー]")) {
+            await simulateTyping(moderatorAgent, modResponse, currentHistory);
+          }
+        }
+      }
+
+      // 最終総括
+      const summaryResponse = await fetchChat(moderatorAgent, currentHistory, false, true);
+      if (summaryResponse.startsWith("[エラー]")) {
+        await processTurn(moderatorAgent, `議論は出尽くしたようです。本日の議論を終了します。`, currentHistory);
+      } else {
+        await simulateTyping(moderatorAgent, summaryResponse, currentHistory);
+      }
+    } catch (err: any) {
+      console.error("Debate flow error:", err);
+    } finally {
+      setStatus('completed');
+    }
+  };
 
   const simulateTyping = async (agent: Agent, content: string, currentHistory: Message[]) => {
     setIsTyping(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // 発言の長さに応じて少し待機時間を変える（より自然に）
+    const delay = Math.min(Math.max(content.length * 10, 1000), 3000);
+    await new Promise(resolve => setTimeout(resolve, delay));
     
     const newMessage: Message = {
       id: Math.random().toString(36).substr(2, 9),
@@ -217,6 +245,8 @@ function App() {
     };
     setMessages(prev => [...prev, newMessage]);
     currentHistory.push(newMessage);
+    // 表示のタイミングを少し空ける
+    await new Promise(resolve => setTimeout(resolve, 500));
   };
 
   const downloadMarkdown = () => {
