@@ -58,6 +58,7 @@ function App() {
         ]);
 
         if (!rolesRes.ok) throw new Error(`Roles API Error (Status: ${rolesRes.status})`);
+        if (!rolesRes.ok) throw new Error(`Roles API Error (Status: ${rolesRes.status})`);
         if (!modelsRes.ok) throw new Error(`Models API Error (Status: ${modelsRes.status})`);
 
         const rolesData = await rolesRes.json();
@@ -70,12 +71,13 @@ function App() {
         if (modelsData.models) {
           setModels(modelsData.models);
         }
-      } catch (err) {
+        } catch (err: any) {
         console.error("Fetch error:", err);
-        setError("データの読み込みに失敗しました。APIキーを確認してください。");
-      } finally {
+        setError(err.message || "データの読み込みに失敗しました。");
+        } finally {
         setIsLoading(false);
-      }
+        }
+
     };
 
     fetchInitialData();
@@ -231,7 +233,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.4</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.5</span></h1>
       </header>
 
       <main className="container">
