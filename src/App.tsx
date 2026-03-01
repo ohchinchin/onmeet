@@ -53,11 +53,10 @@ function App() {
     const fetchInitialData = async () => {
       try {
         const [rolesRes, modelsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/roles`),
-          fetch(`${API_BASE}/api/models`)
+          fetch(`/api/roles`),
+          fetch(`/api/models`)
         ]);
 
-        if (!rolesRes.ok) throw new Error(`Roles API Error (Status: ${rolesRes.status})`);
         if (!rolesRes.ok) throw new Error(`Roles API Error (Status: ${rolesRes.status})`);
         if (!modelsRes.ok) throw new Error(`Models API Error (Status: ${modelsRes.status})`);
 
@@ -71,13 +70,12 @@ function App() {
         if (modelsData.models) {
           setModels(modelsData.models);
         }
-        } catch (err: any) {
+      } catch (err: any) {
         console.error("Fetch error:", err);
-        setError(err.message || "繝・・繧ｿ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
-        } finally {
+        setError(err.message || "Failed to load data.");
+      } finally {
         setIsLoading(false);
-        }
-
+      }
     };
 
     fetchInitialData();
@@ -150,7 +148,7 @@ function App() {
     };
 
     let currentHistory: Message[] = [];
-    await processTurn(moderatorAgent, "隴ｰ隲悶ｒ髢句ｧ九＠縺ｾ縺吶ゅヨ繝斐ャ繧ｯ: " + topic, currentHistory);
+    await processTurn(moderatorAgent, "Starting debate. Topic: " + topic, currentHistory);
 
     for (let turn = 1; turn <= maxTurns; turn++) {
       for (const agent of selectedAgents) {
@@ -170,7 +168,7 @@ function App() {
 
   const fetchChat = async (agent: Agent, history: Message[], isModeratorTurn: boolean, isSummaryTurn: boolean = false) => {
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      const res = await fetch(`/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -182,9 +180,9 @@ function App() {
         })
       });
       const data = await res.json();
-      return data.content || "繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・;
+      return data.content || "An error occurred.";
     } catch (e) {
-      return "騾壻ｿ｡繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・;
+      return "Communication error.";
     }
   };
 
@@ -261,7 +259,7 @@ function App() {
             <div className="agents-setup">
               <div className="section-header">
                 <h3>Agents (Max 5)</h3>
-                <button onClick={randomizeAll} className="btn-secondary">軸 Randomize</button>
+                <button onClick={randomizeAll} className="btn-secondary">🎲 Randomize</button>
               </div>
               
               {selectedAgents.map((agent, index) => (
