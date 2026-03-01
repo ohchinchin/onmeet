@@ -38,11 +38,11 @@ const ROLES_MASTER = [
 
 const MODERATOR_ROLE = {"id": "30", "role": "司会者", "name": "レイコ", "personality": "中立的。議論を整理し、論点への集中を促し、最終的に総括を行う。"};
 
-app.get('/api/roles', (req, res) => {
+app.get('/roles', (req, res) => {
     res.json({ roles: ROLES_MASTER, moderator: MODERATOR_ROLE });
 });
 
-app.get('/api/models', async (req, res) => {
+app.get('/models', async (req, res) => {
     try {
         const response = await axios.get("https://openrouter.ai/api/v1/models");
         const allModels = response.data.data || [];
@@ -55,7 +55,7 @@ app.get('/api/models', async (req, res) => {
     }
 });
 
-app.post('/api/chat', async (req, res) => {
+app.post('/chat', async (req, res) => {
     const { topic, agent, history, isModeratorTurn, isSummaryTurn } = req.body;
     const apiKey = process.env.OPENROUTER_API_KEY;
 
