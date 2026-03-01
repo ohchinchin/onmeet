@@ -168,7 +168,7 @@ function App() {
 
   const fetchChat = async (agent: Agent, history: Message[], isModeratorTurn: boolean, isSummaryTurn: boolean = false) => {
     try {
-      const res = await fetch(`/api/chat`, {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,11 +180,15 @@ function App() {
         })
       });
       const data = await res.json();
-      return data.content || "An error occurred.";
-    } catch (e) {
-      return "Communication error.";
+      if (!res.ok) {
+        return `Error: ${data.error || res.statusText}`;
+      }
+      return data.content || "Empty response from AI.";
+    } catch (e: any) {
+      return `Connection Error: ${e.message}`;
     }
   };
+
 
   const simulateTyping = async (agent: Agent, content: string, currentHistory: Message[]) => {
     setIsTyping(true);
@@ -231,7 +235,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.8</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.9</span></h1>
       </header>
 
       <main className="container">
@@ -259,7 +263,7 @@ function App() {
             <div className="agents-setup">
               <div className="section-header">
                 <h3>Agents (Max 5)</h3>
-                <button onClick={randomizeAll} className="btn-secondary">軸 Randomize</button>
+                <button onClick={randomizeAll} className="btn-secondary">﨟櫁ｻｸ Randomize</button>
               </div>
               
               {selectedAgents.map((agent, index) => (
