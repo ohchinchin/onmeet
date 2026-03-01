@@ -73,7 +73,7 @@ function App() {
         }
         } catch (err: any) {
         console.error("Fetch error:", err);
-        setError(err.message || "データの読み込みに失敗しました。");
+        setError(err.message || "繝・・繧ｿ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・);
         } finally {
         setIsLoading(false);
         }
@@ -150,7 +150,7 @@ function App() {
     };
 
     let currentHistory: Message[] = [];
-    await processTurn(moderatorAgent, "議論を開始します。トピック: " + topic, currentHistory);
+    await processTurn(moderatorAgent, "隴ｰ隲悶ｒ髢句ｧ九＠縺ｾ縺吶ゅヨ繝斐ャ繧ｯ: " + topic, currentHistory);
 
     for (let turn = 1; turn <= maxTurns; turn++) {
       for (const agent of selectedAgents) {
@@ -182,9 +182,9 @@ function App() {
         })
       });
       const data = await res.json();
-      return data.content || "エラーが発生しました。";
+      return data.content || "繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・;
     } catch (e) {
-      return "通信エラーが発生しました。";
+      return "騾壻ｿ｡繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・;
     }
   };
 
@@ -233,7 +233,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.5</span></h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.6</span></h1>
       </header>
 
       <main className="container">
@@ -261,7 +261,7 @@ function App() {
             <div className="agents-setup">
               <div className="section-header">
                 <h3>Agents (Max 5)</h3>
-                <button onClick={randomizeAll} className="btn-secondary">🎲 Randomize</button>
+                <button onClick={randomizeAll} className="btn-secondary">軸 Randomize</button>
               </div>
               
               {selectedAgents.map((agent, index) => (
