@@ -8,7 +8,7 @@ const DEFAULT_FREE_MODELS = [
 
 module.exports = async (req, res) => {
   try {
-    const response = await axios.get("https://openrouter.ai/api/v1/models", { timeout: 5000 });
+    const response = await axios.get("https://openrouter.ai/api/v1/models", { timeout: 8000 });
     const freeModels = (response.data.data || [])
       .filter(m => m.pricing && m.pricing.prompt === "0" && m.pricing.completion === "0")
       .map(m => ({ id: m.id, name: m.name }));

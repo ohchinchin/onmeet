@@ -1,7 +1,6 @@
 {
   "name": "onmeet",
-  "version": "1.0.6",
-  "type": "module",
+  "version": "1.0.8",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

@@ -8,10 +8,12 @@ module.exports = async (req, res) => {
   const { topic, agent, history, isSummaryTurn } = req.body;
   const apiKey = process.env.OPENROUTER_API_KEY;
 
-  if (!apiKey) return res.status(500).json({ error: "API key not set in Vercel." });
+  if (!apiKey) {
+    return res.status(500).json({ error: "OPENROUTER_API_KEY is not set." });
+  }
 
   const systemPrompt = agent.isModerator
-    ? (isSummaryTurn ? `あなたは司会者です。これまでの議論を要約し、総括を行ってください。` : `あなたは司会者です。議論が盛り上がるようにリードしてください。`)
+    ? (isSummaryTurn ? "あなたは司会者です。総括を行ってください。" : "あなたは司会者です。議論をリードしてください。")
     : `あなたは${agent.name}（${agent.role}）です。性格: ${agent.personality}。専門的視点から発言してください。`;
 
   const messages = [
@@ -35,10 +37,10 @@ module.exports = async (req, res) => {
     if (response.data && response.data.choices && response.data.choices[0]) {
       res.status(200).json({ content: response.data.choices[0].message.content });
     } else {
-      res.status(500).json({ error: "Invalid response from OpenRouter" });
+      res.status(500).json({ error: "OpenRouter returned an empty response." });
     }
   } catch (error) {
-    console.error("Chat API Error:", error.response?.data || error.message);
+    console.error("Chat API Error:", error.response ? error.response.data : error.message);
     res.status(500).json({ error: error.message });
   }
 };
