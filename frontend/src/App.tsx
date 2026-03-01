@@ -58,7 +58,8 @@ function App() {
           fetch(`${API_BASE}/api/models`)
         ]);
 
-        if (!rolesRes.ok || !modelsRes.ok) throw new Error("API request failed");
+        if (!rolesRes.ok) throw new Error(`Roles API Error (Status: ${rolesRes.status})`);
+        if (!modelsRes.ok) throw new Error(`Models API Error (Status: ${modelsRes.status})`);
 
         const rolesData = await rolesRes.json();
         const modelsData = await modelsRes.json();
@@ -235,18 +236,23 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI-Debate Studio</h1>
+        <h1>AI-Debate Studio <span style={{fontSize: '14px', opacity: 0.5}}>v1.0.1</span></h1>
       </header>
 
       <main className="container">
         {isLoading ? (
           <div className="loading-screen">
             <p>議論の準備をしています...</p>
+            <div className="debug-info">APIへの接続を確認中...</div>
           </div>
         ) : error ? (
           <div className="error-screen">
-            <p>{error}</p>
-            <button onClick={() => window.location.reload()} className="btn-secondary">再読み込み</button>
+            <h3>接続エラー</h3>
+            <p style={{color: '#ff6b6b'}}>{error}</p>
+            <div style={{fontSize: '12px', marginTop: '10px', opacity: 0.7}}>
+              ヒント: Vercelの環境変数に OPENROUTER_API_KEY が正しく設定されているか確認してください。
+            </div>
+            <button onClick={() => window.location.reload()} className="btn-secondary" style={{marginTop: '20px'}}>再読み込み</button>
           </div>
         ) : status === 'setting' ? (
           <section className="setup-area">
